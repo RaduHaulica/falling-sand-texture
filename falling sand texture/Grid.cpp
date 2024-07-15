@@ -22,39 +22,11 @@ Grid::~Grid()
 	delete _grid;
 }
 
-void Grid::thread_render_function(int left, int top, int right, int bottom)
+void Grid::thread_render_function(int left, int right, int top, int bottom, sf::Uint8* pixelGrid)
 {
-	;
-}
-
-
-void Grid::render()
-{
-	//_threads.clear();
-
-	//for (int i = 0; i < 8; i++)
-	//{
-	//	_threads.push_back(std::thread(
-	//		&Grid::thread_update_function,
-	//		this,
-	//		i * (Globals::gridSize / 8),
-	//		(i + 1) * (Globals::gridSize / 8) - 1,
-	//		0,
-	//		Globals::gridSize - 1
-	//	));
-	//}
-
-	//for (int i = 0; i < 8; i++)
-	//{
-	//	_threads[i].join();
-	//}
-
-	//_threads.clear();
-
-	sf::Uint8* _pixelGrid = new sf::Uint8[Globals::gridSize * Globals::gridSize * 4 * Globals::particleSize * Globals::particleSize];
-	for (int i = 0; i < Globals::gridSize; i++)
+	for (int i = left; i < right; i++)
 	{
-		for (int j = 0; j < Globals::gridSize; j++)
+		for (int j = top; j < bottom; j++)
 		{
 			int currentPosition = gridCoordinatesToGridPosition(i, j);
 			PARTICLE_TYPE baseType = detectParticleType(_grid[currentPosition]);
@@ -66,16 +38,67 @@ void Grid::render()
 				for (int l = 0; l < Globals::particleSize; l++)
 				{
 					int position = j * Globals::gridSize * Globals::particleSize * 4 * Globals::particleSize + i * 4 * Globals::particleSize + l * Globals::gridSize * Globals::particleSize * 4 + k * 4;
-					_pixelGrid[position] = newParticle._color.r;
-					_pixelGrid[position + 1] = newParticle._color.g;
-					_pixelGrid[position + 2] = newParticle._color.b;
-					_pixelGrid[position + 3] = newParticle._color.a;
+					pixelGrid[position] = newParticle._color.r;
+					pixelGrid[position + 1] = newParticle._color.g;
+					pixelGrid[position + 2] = newParticle._color.b;
+					pixelGrid[position + 3] = newParticle._color.a;
 				}
 			}
 		}
 	}
-	_gridTexture.update(_pixelGrid);
+}
 
+
+void Grid::render()
+{
+	sf::Uint8* _pixelGrid = new sf::Uint8[Globals::gridSize * Globals::gridSize * 4 * Globals::particleSize * Globals::particleSize];
+
+	_threads.clear();
+
+	for (int i = 0; i < 16; i++)
+	{
+		_threads.push_back(std::thread(
+			&Grid::thread_render_function,
+			this,
+			i * (Globals::gridSize / 16),
+			(i + 1) * (Globals::gridSize / 16),
+			0,
+			Globals::gridSize,
+			_pixelGrid
+		));
+	}
+
+	for (int i = 0; i < 16; i++)
+	{
+		_threads[i].join();
+	}
+
+	_threads.clear();
+
+	//for (int i = 0; i < Globals::gridSize; i++)
+	//{
+	//	for (int j = 0; j < Globals::gridSize; j++)
+	//	{
+	//		int currentPosition = gridCoordinatesToGridPosition(i, j);
+	//		PARTICLE_TYPE baseType = detectParticleType(_grid[currentPosition]);
+	//		Particle newParticle = ParticleFactory::createParticle(baseType);
+
+	//		// for each particle create [ size x size ] pixels
+	//		for (int k = 0; k < Globals::particleSize; k++)
+	//		{
+	//			for (int l = 0; l < Globals::particleSize; l++)
+	//			{
+	//				int position = j * Globals::gridSize * Globals::particleSize * 4 * Globals::particleSize + i * 4 * Globals::particleSize + l * Globals::gridSize * Globals::particleSize * 4 + k * 4;
+	//				_pixelGrid[position] = newParticle._color.r;
+	//				_pixelGrid[position + 1] = newParticle._color.g;
+	//				_pixelGrid[position + 2] = newParticle._color.b;
+	//				_pixelGrid[position + 3] = newParticle._color.a;
+	//			}
+	//		}
+	//	}
+	//}
+
+	_gridTexture.update(_pixelGrid);
 	//_gridTexture.update(_grid);
 	delete _pixelGrid;
 }

@@ -107,6 +107,8 @@ int main()
                     type = PARTICLE_TYPE::WATER;
                 else if (KeyRPressed)
                     type = PARTICLE_TYPE::ROCK;
+                else
+                    type = PARTICLE_TYPE::NOTHING;
             }
             else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
             {

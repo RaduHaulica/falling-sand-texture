@@ -27,10 +27,11 @@ struct ParticleConfig
 
 enum PARTICLE_TYPE
 {
-	NOTHING = 0,
-	SAND = 1,
-	WATER = 2,
-	ROCK = 3
+	UNDEFINED = 0,
+	NOTHING = 1,
+	SAND = 2,
+	WATER = 3,
+	ROCK = 4
 };
 
 class Particle

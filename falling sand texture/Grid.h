@@ -25,7 +25,7 @@ public:
 
 	void update_particle(int x, int y);
 	void thread_update_function(int left, int top, int right, int bottom);
-	void thread_render_function(int left, int top, int right, int bottom);
+	void thread_render_function(int left, int top, int right, int bottom, sf::Uint8* pixelGrid);
 	void update_multithreaded();
 	void update_singlethreaded();
 	void update();
