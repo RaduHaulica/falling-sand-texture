@@ -55,6 +55,7 @@ sf::Vector2f convertWindowCoordinatesToWorldCoordinates(int x, int y);
 sf::Vector2f convertWorldCoordinatesToWindowCoordinates(int x, int y);
 
 bool colorCompare(sf::Color color1, sf::Color color2);
+sf::Color colorVariance(sf::Color input);
 
 PARTICLE_TYPE detectParticleType(sf::Uint8& particle);
 

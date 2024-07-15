@@ -55,20 +55,22 @@ void Grid::render()
 
 	_threads.clear();
 
-	for (int i = 0; i < 16; i++)
+	int threads = 16;
+
+	for (int i = 0; i < threads; i++)
 	{
 		_threads.push_back(std::thread(
 			&Grid::thread_render_function,
 			this,
-			i * (Globals::gridSize / 16),
-			(i + 1) * (Globals::gridSize / 16),
+			i * (Globals::gridSize / threads),
+			(i + 1) * (Globals::gridSize / threads),
 			0,
 			Globals::gridSize,
 			_pixelGrid
 		));
 	}
 
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < threads; i++)
 	{
 		_threads[i].join();
 	}

@@ -44,12 +44,39 @@ Particle ParticleFactory::createParticle(PARTICLE_TYPE type)
 	}
 	}
 
+	newParticle._color = colorVariance(newParticle._color);
 	return newParticle;
 }
 
 bool colorCompare(sf::Color color1, sf::Color color2)
 {
-	return ((std::abs(color1.r - color2.r) < 10) && (std::abs(color1.g - color2.g) < 10) && (std::abs(color1.b - color2.b) < 10));
+	int compareOffset = 15;
+	return ((std::abs(color1.r - color2.r) < compareOffset) && (std::abs(color1.g - color2.g) < compareOffset) && (std::abs(color1.b - color2.b) < compareOffset));
+}
+
+sf::Color colorVariance(sf::Color input)
+{
+	int offset = std::rand() % 20 - 10;
+
+	if (input.r + offset < 0)
+		input.r = 0;
+	else if (input.r + offset > 255)
+		input.r = 255;
+	else input.r += offset;
+
+	if (input.g + offset < 0)
+		input.g = 0;
+	else if (input.g + offset > 255)
+		input.g = 255;
+	else input.g += offset;
+
+	if (input.b + offset < 0)
+		input.b = 0;
+	else if (input.b + offset > 255)
+		input.b = 255;
+	else input.b += offset;
+
+	return input;
 }
 
 int gridCoordinatesToGridPosition(int x, int y)
