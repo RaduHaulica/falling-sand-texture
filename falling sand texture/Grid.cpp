@@ -342,7 +342,7 @@ void Grid::update_particle(int x, int y)
 							xOffset++;
 						else if (!directionRight && left)
 							xOffset--;
-						steps -= (std::rand() % 4) / 2; // introduce some chaos in sideways water movement
+						steps -= (std::rand() % 4) / 2; // introduce some chaos in sideways lava movement
 					}
 					else
 					{
@@ -367,6 +367,86 @@ void Grid::update_particle(int x, int y)
 				break;
 			}
 		}
+
+		// destroy stuff
+		bool destroyedWater{ false };
+		if (currentX > 0 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX - 1, currentY)]) == PARTICLE_TYPE::WATER)
+		{
+			set(currentX - 1, currentY, PARTICLE_TYPE::NOTHING);
+			destroyedWater = true;
+		}
+		if (currentX < Globals::gridSize - 1 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX + 1, currentY)]) == PARTICLE_TYPE::WATER)
+		{
+			set(currentX + 1, currentY, PARTICLE_TYPE::NOTHING);
+			destroyedWater = true;
+		}
+		if (currentY > 0 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX, currentY - 1)]) == PARTICLE_TYPE::WATER)
+		{
+			set(currentX, currentY - 1, PARTICLE_TYPE::NOTHING);
+			destroyedWater = true;
+		}
+		if (currentY < Globals::gridSize - 1 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX, currentY + 1)]) == PARTICLE_TYPE::WATER)
+		{
+			set(currentX, currentY + 1, PARTICLE_TYPE::NOTHING);
+			destroyedWater;
+		}
+		if (destroyedWater)
+		{
+			set(currentX, currentY, PARTICLE_TYPE::ROCK);
+		}
+
+		bool destroyedSand{ false };
+		if (currentX > 0 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX - 1, currentY)]) == PARTICLE_TYPE::SAND)
+		{
+			set(currentX - 1, currentY, PARTICLE_TYPE::LAVA);
+			destroyedSand = true;
+		}
+		if (currentX < Globals::gridSize - 1 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX + 1, currentY)]) == PARTICLE_TYPE::SAND)
+		{
+			set(currentX + 1, currentY, PARTICLE_TYPE::LAVA);
+			destroyedSand = true;
+		}
+		//if (currentY > 0 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX, currentY - 1)]) == PARTICLE_TYPE::SAND)
+		//{
+		//	set(currentX, currentY - 1, PARTICLE_TYPE::LAVA);
+		//	destroyedSand = true;
+		//}
+		if (currentY < Globals::gridSize - 1 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX, currentY + 1)]) == PARTICLE_TYPE::SAND)
+		{
+			set(currentX, currentY + 1, PARTICLE_TYPE::LAVA);
+			destroyedSand;
+		}
+		if (destroyedSand)
+		{
+			set(currentX, currentY, PARTICLE_TYPE::NOTHING);
+		}
+
+		bool destroyedRock{ false };
+		if (currentX > 0 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX - 1, currentY)]) == PARTICLE_TYPE::ROCK)
+		{
+			set(currentX - 1, currentY, PARTICLE_TYPE::SAND);
+			destroyedRock = true;
+		}
+		if (currentX < Globals::gridSize - 1 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX + 1, currentY)]) == PARTICLE_TYPE::ROCK)
+		{
+			set(currentX + 1, currentY, PARTICLE_TYPE::SAND);
+			destroyedRock = true;
+		}
+		if (currentY > 0 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX, currentY - 1)]) == PARTICLE_TYPE::ROCK)
+		{
+			set(currentX, currentY - 1, PARTICLE_TYPE::SAND);
+			destroyedRock = true;
+		}
+		if (currentY < Globals::gridSize - 1 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX, currentY + 1)]) == PARTICLE_TYPE::ROCK)
+		{
+			set(currentX, currentY + 1, PARTICLE_TYPE::SAND);
+			destroyedRock;
+		}
+		if (destroyedRock)
+		{
+			set(currentX, currentY, PARTICLE_TYPE::NOTHING);
+		}
+
 		break;
 	}
 	}
