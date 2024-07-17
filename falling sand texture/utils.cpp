@@ -15,6 +15,7 @@ void initializeConfig()
 	CONFIG.COLOR_ROCK.g = 127;
 	CONFIG.COLOR_ROCK.b = 127;
 	CONFIG.COLOR_ROCK.a = 255;
+	CONFIG.COLOR_LAVA = sf::Color::Red;
 }
 
 Particle ParticleFactory::createParticle(PARTICLE_TYPE type)
@@ -40,6 +41,11 @@ Particle ParticleFactory::createParticle(PARTICLE_TYPE type)
 	case PARTICLE_TYPE::ROCK:
 	{
 		newParticle._color = CONFIG.COLOR_ROCK;
+		break;
+	}
+	case PARTICLE_TYPE::LAVA:
+	{
+		newParticle._color = CONFIG.COLOR_LAVA;
 		break;
 	}
 	}
@@ -122,6 +128,11 @@ PARTICLE_TYPE detectParticleType(sf::Uint8& particle)
 	if (colorCompare(testColor, CONFIG.COLOR_ROCK))
 	{
 		return PARTICLE_TYPE::ROCK;
+	}
+
+	if (colorCompare(testColor, CONFIG.COLOR_LAVA))
+	{
+		return PARTICLE_TYPE::LAVA;
 	}
 
 	return PARTICLE_TYPE::NOTHING;

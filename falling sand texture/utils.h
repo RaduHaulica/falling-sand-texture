@@ -5,7 +5,7 @@
 struct Globals
 {
 	static const int gridStart = 0;
-	static const int gridEnd = 1023;
+	static const int gridEnd = 512;
 	static const int gridSize = 512;
 	static const int brushSize = 20;
 	static const int particleSpeed = 10;
@@ -23,6 +23,7 @@ struct ParticleConfig
 	sf::Color COLOR_SAND;
 	sf::Color COLOR_WATER;
 	sf::Color COLOR_ROCK;
+	sf::Color COLOR_LAVA;
 };
 
 enum PARTICLE_TYPE
@@ -31,7 +32,8 @@ enum PARTICLE_TYPE
 	NOTHING = 1,
 	SAND = 2,
 	WATER = 3,
-	ROCK = 4
+	ROCK = 4,
+	LAVA = 5
 };
 
 class Particle

@@ -36,6 +36,12 @@ int main()
     bool KeyRDepressed{ false };
     bool KeyRPressed{ false };
 
+    bool KeyFDepressed{ false };
+    bool KeyFPressed{ false };
+
+    bool KeyLDepressed{ false };
+    bool KeyLPressed{ false };
+
     sf::Font defaultFont;
     defaultFont.loadFromFile("Roboto-Bold.ttf");
 
@@ -79,11 +85,17 @@ int main()
         KeySDepressed = (KeySPressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::S)) ? true : false;
         KeySPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::S) ? true : false;
 
-        KeyWDepressed = (KeyWDepressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::W)) ? true : false;
+        KeyWDepressed = (KeyWPressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::W)) ? true : false;
         KeyWPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::W) ? true : false;
 
-        KeyRDepressed = (KeyRDepressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::R)) ? true : false;
+        KeyRDepressed = (KeyRPressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::R)) ? true : false;
         KeyRPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::R) ? true : false;
+
+        KeyFDepressed = (KeyFPressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::F)) ? true : false;
+        KeyFPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::F) ? true : false;
+
+        KeyLDepressed = (KeyLPressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::L)) ? true : false;
+        KeyLPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::L) ? true : false;
 
         // process input
         Globals::multiThreaded = KeyF1Depressed ? !Globals::multiThreaded : Globals::multiThreaded;
@@ -107,6 +119,8 @@ int main()
                     type = PARTICLE_TYPE::WATER;
                 else if (KeyRPressed)
                     type = PARTICLE_TYPE::ROCK;
+                else if (KeyLPressed)
+                    type = PARTICLE_TYPE::LAVA;
                 else
                     type = PARTICLE_TYPE::NOTHING;
             }

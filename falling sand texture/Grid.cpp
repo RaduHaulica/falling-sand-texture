@@ -55,7 +55,7 @@ void Grid::render()
 
 	_threads.clear();
 
-	int threads = 16;
+	int threads = 8;
 
 	for (int i = 0; i < threads; i++)
 	{
@@ -101,8 +101,9 @@ void Grid::render()
 	//}
 
 	_gridTexture.update(_pixelGrid);
-	//_gridTexture.update(_grid);
 	delete _pixelGrid;
+
+	//_gridTexture.update(_grid);
 }
 
 void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -268,6 +269,93 @@ void Grid::update_particle(int x, int y)
 					}
 					currentX += xOffset;
 					set(currentX, currentY, PARTICLE_TYPE::WATER);
+				}
+				else
+				{
+					break;
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+		break;
+	}
+	case PARTICLE_TYPE::LAVA:
+	{
+		bool directionDecided{ false };
+		bool directionRight{ false };
+		while (steps < Globals::particleSpeed)
+		{
+			steps++;
+			if ((currentX > 0) && (currentX < Globals::gridSize - 2) && (currentY <= Globals::gridSize - 2))
+			{
+				// down
+				if (detectParticleType(_grid[gridCoordinatesToGridPosition(currentX, currentY + 1)]) == PARTICLE_TYPE::NOTHING)
+				{
+					set(currentX, currentY, detectParticleType(_grid[gridCoordinatesToGridPosition(currentX, currentY + 1)]));
+					currentY++;
+					set(currentX, currentY, PARTICLE_TYPE::LAVA);
+
+				}
+				// down-left and down-right
+				else if (detectParticleType(_grid[gridCoordinatesToGridPosition(currentX - 1, currentY + 1)]) == PARTICLE_TYPE::NOTHING || detectParticleType(_grid[gridCoordinatesToGridPosition(currentX + 1, currentY + 1)]) == PARTICLE_TYPE::NOTHING)
+				{
+					bool left{ false }, right{ false };
+					if (detectParticleType(_grid[gridCoordinatesToGridPosition(currentX - 1, currentY + 1)]) == PARTICLE_TYPE::NOTHING)
+					{
+						left = true;
+					}
+					if (detectParticleType(_grid[gridCoordinatesToGridPosition(currentX + 1, currentY + 1)]) == PARTICLE_TYPE::NOTHING)
+					{
+						right = true;
+					}
+					set(currentX, currentY, PARTICLE_TYPE::NOTHING);
+					int xOffset = -1 * (int)left + 1 * (int)right;
+					if (left && right)
+					{
+						xOffset += (std::rand() % 2) * 2 - 1;
+					}
+					currentX += xOffset;
+					currentY++;
+					set(currentX, currentY, PARTICLE_TYPE::LAVA);
+				}
+				// left or right
+				else if (detectParticleType(_grid[gridCoordinatesToGridPosition(currentX - 1, currentY)]) == PARTICLE_TYPE::NOTHING || detectParticleType(_grid[gridCoordinatesToGridPosition(currentX + 1, currentY)]) == PARTICLE_TYPE::NOTHING)
+				{
+					bool left{ false }, right{ false };
+					int xOffset{ 0 };
+					if (detectParticleType(_grid[gridCoordinatesToGridPosition(currentX - 1, currentY)]) == PARTICLE_TYPE::NOTHING)
+					{
+						left = true;
+					}
+					if (detectParticleType(_grid[gridCoordinatesToGridPosition(currentX + 1, currentY)]) == PARTICLE_TYPE::NOTHING)
+					{
+						right = true;
+					}
+
+					set(currentX, currentY, PARTICLE_TYPE::NOTHING);
+					if (directionDecided)
+					{
+						if (directionRight && right)
+							xOffset++;
+						else if (!directionRight && left)
+							xOffset--;
+						steps -= (std::rand() % 4) / 2; // introduce some chaos in sideways water movement
+					}
+					else
+					{
+						xOffset = -1 * (int)left + 1 * (int)right;
+						if (left && right)
+						{
+							directionDecided = true;
+							directionRight = std::rand() % 2 == 1 ? true : false;
+							xOffset += directionRight == true ? 1 : -1;
+						}
+					}
+					currentX += xOffset;
+					set(currentX, currentY, PARTICLE_TYPE::LAVA);
 				}
 				else
 				{
