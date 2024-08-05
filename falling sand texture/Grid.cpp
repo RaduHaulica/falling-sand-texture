@@ -104,11 +104,23 @@ void Grid::render()
 	delete _pixelGrid;
 
 	//_gridTexture.update(_grid);
+
+	_smokeVA.clear();
+	sf::Color smokeColor;
+	smokeColor.r = 64;
+	smokeColor.g = 64;
+	smokeColor.b = 64;
+	smokeColor.a = 255;
+	for (int i = 0; i < _smokeParticles.size(); i++)
+	{
+		_smokeVA.append(sf::Vertex(sf::Vector2f(_smokeParticles[i].x * Globals::particleSize, _smokeParticles[i].y * Globals::particleSize), smokeColor));
+	}
 }
 
 void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(_gridSprite);
+	target.draw(_smokeVA);
 }
 
 sf::Uint8* Grid::get(int x, int y)
@@ -393,24 +405,25 @@ void Grid::update_particle(int x, int y)
 		if (destroyedWater)
 		{
 			set(currentX, currentY, PARTICLE_TYPE::ROCK);
+			_smokeParticles.push_back(sf::Vector2f( currentX, currentY ));
 		}
 
 		bool destroyedSand{ false };
 		if (currentX > 0 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX - 1, currentY)]) == PARTICLE_TYPE::SAND)
 		{
-			set(currentX - 1, currentY, PARTICLE_TYPE::LAVA);
+			set(currentX - 1, currentY, PARTICLE_TYPE::NOTHING);
 			destroyedSand = true;
 		}
 		if (currentX < Globals::gridSize - 1 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX + 1, currentY)]) == PARTICLE_TYPE::SAND)
 		{
-			set(currentX + 1, currentY, PARTICLE_TYPE::LAVA);
+			set(currentX + 1, currentY, PARTICLE_TYPE::NOTHING);
 			destroyedSand = true;
 		}
-		//if (currentY > 0 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX, currentY - 1)]) == PARTICLE_TYPE::SAND)
-		//{
-		//	set(currentX, currentY - 1, PARTICLE_TYPE::LAVA);
-		//	destroyedSand = true;
-		//}
+		if (currentY > 0 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX, currentY - 1)]) == PARTICLE_TYPE::SAND)
+		{
+			set(currentX, currentY - 1, PARTICLE_TYPE::NOTHING);
+			destroyedSand = true;
+		}
 		if (currentY < Globals::gridSize - 1 && detectParticleType(_grid[gridCoordinatesToGridPosition(currentX, currentY + 1)]) == PARTICLE_TYPE::SAND)
 		{
 			set(currentX, currentY + 1, PARTICLE_TYPE::LAVA);
@@ -445,6 +458,7 @@ void Grid::update_particle(int x, int y)
 		if (destroyedRock)
 		{
 			set(currentX, currentY, PARTICLE_TYPE::NOTHING);
+			_smokeParticles.push_back(sf::Vector2f( currentX, currentY ));
 		}
 
 		break;
@@ -507,6 +521,24 @@ void Grid::update()
 	else
 	{
 		update_singlethreaded();
+	}
+
+	for (int i = 0; i < _smokeParticles.size(); i++)
+	{
+		sf::Vector2f& p = _smokeParticles[i];
+		if (p.y > 0)
+		{
+			if (p.x > 0 && p.x < Globals::gridSize - 1)
+			{
+				p.x += std::rand() % 2 * 2 - 1;
+			}
+			p.y--;
+		}
+		else
+		{
+			_smokeParticles.erase(_smokeParticles.begin() + i);
+			i--;
+		}
 	}
 
 	render();

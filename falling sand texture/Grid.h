@@ -14,6 +14,9 @@ public:
 	sf::Texture _gridTexture;
 	sf::Sprite _gridSprite;
 
+	sf::VertexArray _smokeVA;
+	std::vector<sf::Vector2f> _smokeParticles;
+
 	std::vector<std::thread> _threads;
 
 	Grid();

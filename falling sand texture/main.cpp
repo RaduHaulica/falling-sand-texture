@@ -152,6 +152,8 @@ int main()
             // help text
             std::string helpString("F1 - toggle multithreading\n");
             helpString.append(Globals::multiThreaded ? "Multithreaded\n" : "Singlethreaded\n");
+            helpString.append("Click and hold key to create particles:\nS - sand\nW - water\nR - rock\nL - Lava\n\nRight click to delete particles.\n\n");
+            helpString.append("Rock stays put\nSand falls down\nWater can't stand still\nLava melts everything\n");
             helpText.setString(helpString);
 
             // drawing
