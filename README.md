@@ -1,5 +1,7 @@
 ## Falling Sand Simulation
 
+![Falling sand simulation cover image](https://github.com/RaduHaulica/falling-sand-texture/blob/df7e19194b066492f3deac41114d233493c4a5ed/falling%20sand%20texture/media/falling%20sand.gif)
+
 Individually simulated particles of sand, water, rock and lava. Each particle has to decide where to go every 1/60th of a second.
 
 Sand falls until there's no place to go, water moves around until it's level, rock ignores gravity, and lava melts everything it touches.
