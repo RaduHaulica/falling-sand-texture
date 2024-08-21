@@ -49,3 +49,5 @@ After that i added rock that's not affected by gravity to try out more complex m
 Click and drag to create particles. Right click to delete them.
 
 Hold S to create sand, W to create water, R to create rock, and L to create Lava.
+
+![Falling sand simulation help text](https://github.com/RaduHaulica/falling-sand-texture/blob/dc1a7d1118a6a4e9418a749818f688ece611cfa3/falling%20sand%20texture/media/falling%20sand%20instructions.png)
