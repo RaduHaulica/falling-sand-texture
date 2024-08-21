@@ -154,6 +154,13 @@
     <ClInclude Include="Grid.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="media\falling sand instructions.png" />
+    <Image Include="media\falling sand.gif" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
